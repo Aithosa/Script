@@ -21,4 +21,8 @@ notice that the reservation website has a delay than normal time:
 
 ### Update history
 
-V1.0 2019.09.26 Core function is ready. The script has been test on linux to be efective, but the `SetTime` function may not work well.
+**V1.0** 2019.09.26 Core function is ready. The script has been test on linux to be efective.
+
+* The `SetTime` function may not work well. 
+* Reservation logic needs to be fixed for sunday. 
+* After reservation system opens for next day, program need to quit if the reservation not successfully(of course it depends). 
