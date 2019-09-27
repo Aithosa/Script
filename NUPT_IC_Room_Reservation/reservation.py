@@ -198,12 +198,12 @@ def reserve_main():
                     else:
                         flags[0] = True
 
-                    if seat1 != False and not flags[1]:
+                    if seat1 is not False and not flags[1]:
                         flags[1] = reserve(seat1, Cookies)
                     else:
                         flags[1] = True
 
-                    if seat2 != False and not flags[2]:
+                    if seat2 is not False and not flags[2]:
                         flags[2] = reserve(seat2, Cookies)
                     else:
                         flags[2] = True
