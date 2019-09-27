@@ -17,7 +17,7 @@ def getRoomId(room_source):
     # objid = "100455441_100455316" objname = "532"
     # objid="100455445_100455316" objname="533"
     roomIdDict = {"403-2": "100455324",
-                  "532": "100455441", 
+                  "532": "100455441",
                   "533": "100455445"
                   }
 
@@ -29,7 +29,7 @@ def getRoomId(room_source):
 
 # 从config读数据
 def readRoom(conf, room):
-    
+
     # 考虑到程序执行的时间会影响预先获取的预约时间
     # 零点开始预约第二天的房间,否则获取第三天的时间
     now = time.strftime('%H:%M:%S', time.localtime(time.time()))    # 时:分:秒
@@ -48,9 +48,9 @@ def readRoom(conf, room):
 
     # room = getSeatId(room_source)
     room = getRoomId(room_source)
-    
+
     print([room, date, start_time, end_time])
-    
+
     return [room, date, start_time, end_time]
 
 
@@ -62,7 +62,7 @@ def confDeal():
     # 读取用户数据
     uid = conf.get('user_set', 'user_id')
     pwd = conf.get('user_set', 'user_password')
-    
+
     if pwd == '000000':
         pwd = input('输入密码:')
         os.system('cls')
@@ -73,15 +73,15 @@ def confDeal():
     flag2 = conf.get('room_set_2', 'flag')
 
     print("预约请求队列: ")
-    
+
     # 读取座位1
     arr1 = readRoom(conf, 'room_set')
-    
+
     if flag1 == 'true':
         arr2 = readRoom(conf, 'room_set_1')
     else:
         arr2 = False
-        
+
     if flag2 == 'true':
         arr3 = readRoom(conf, 'room_set_2')
     else:
@@ -135,7 +135,7 @@ def reserve(arr, cookies):
     # url传入开始时间格式:2019-4-20 09:10
     s_t = date+' '+st[0:2]+':'+st[2:]
     e_t = date+' '+et[0:2]+':'+et[2:]
-    
+
     params = {
         'dev_id': room,
         'type': 'dev',
@@ -157,12 +157,12 @@ def reserve(arr, cookies):
         room_file = open('logfile.log', 'w')
         room_file.write(rept)
         room_file.close()
-        
+
         return True
-    
+
     else:
         return False
-    
+
         # time.sleep(0.5)
         # reserve(arr, cookies)
 
@@ -185,66 +185,65 @@ def reserve_main():
         print('\n 登陆成功...')
         # time.sleep(2)
         os.system('cls')
-        
+
         if SetTime():
-        # if True:
+            # if True:
             flags = [False, False, False]
-            
+
             while (True):
                 if login(user, Cookies):
-                    
+
                     if not flags[0]:
                         flags[0] = reserve(seat, Cookies)
                     else:
                         flags[0] = True
-                    
+
                     if seat1 != False and not flags[1]:
                         flags[1] = reserve(seat1, Cookies)
                     else:
                         flags[1] = True
-                        
+
                     if seat2 != False and not flags[2]:
                         flags[2] = reserve(seat2, Cookies)
                     else:
                         flags[2] = True
-                    
+
                     time.sleep(0.5)
-                    
+
                     # 再次预约失败的房间
                     if login(user, Cookies):
-                        
+
                         if not flags[0]:
                             flags[0] = reserve(seat, Cookies)
                         if not flags[1]:
                             flags[1] = reserve(seat1, Cookies)
                         if not flags[2]:
                             flags[2] = reserve(seat2, Cookies)
-                    
+
                     # 退出循环条件
                     if flags[0] and flags[1] and flags[2]:
                         break
 
 
-
 # 定时判断器只能提前一天——还未开放
 def SetTime():
     print('定时器启动...\n')
-    
+
     while True:
         now = time.strftime('%H:%M:%S', time.localtime(time.time()))    # 时:分:秒
         nowm = time.strftime('%H:%M', time.localtime(time.time()))    # 时:分
-        #vnow = '00:02:49'
+        # now = '00:02:49'
         # nowm = '00:02'
         H = 24 - int(now.split(':')[0])    # 距离零点还剩的小时
         M = int(now.split(':')[1])    # 分
         S = int(now.split(':')[2])    # 秒
 
         sleepTime = H*3600 - M*60 - S
-        
+
         print("\n\"", H, "H", M, "M", S, "S\" left...")
         print("sleepTime: ", sleepTime, "\n")
-        
-        if nowm == '00:02':   
+
+        if nowm == '00:02':
             print('已到设定时间, 程序即将启动...\n')
             time.sleep(1)
             return True
@@ -264,13 +263,13 @@ def SetTime():
             # 等待5min
             time.sleep(300)
             sys.stdout.flush()
-            
+
         elif sleepTime > 120:
             sys.stdout.write('\r{0}'.format(
                 '现在时间2: ' + now + '  待机时间：' + str(round(H*60-M-S/60, 1))))
             time.sleep(10)
             sys.stdout.flush()
-            
+
         else:
             sys.stdout.write('\r{0}'.format(
                 '现在时间3: ' + now + '  待机时间：' + str(sleepTime)))
@@ -301,7 +300,6 @@ def main():
     print('程序即将退出...\n')
     time.sleep(5)
     # os.system('shutdown -s -f -t 10')
-
 
 
 main()
