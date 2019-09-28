@@ -74,7 +74,7 @@ def confDeal():
     # 添加用户信息
     reserve_queue.append(user)
 
-    flags = []
+    # flags = []
 
     # 读取座位是否启用
     flag0 = conf.get('room_set_0', 'flag')
@@ -82,7 +82,7 @@ def confDeal():
     flag2 = conf.get('room_set_2', 'flag')
     flag3 = conf.get('room_set_3', 'flag')
 
-    flags = [flag0, flag1, flag2, flag3]
+    # flags = [flag0, flag1, flag2, flag3]
 
     print("预约请求队列: ")
 
@@ -262,7 +262,7 @@ def stopcond(flags):
     now = time.strftime('%H:%M:%S', time.localtime(time.time()))    # 时:分:秒
     H = int(now.split(':')[0])    # 距离零点还剩的小时
     M = int(now.split(':')[1])    # 分
-    S = int(now.split(':')[2])    # 秒
+    # S = int(now.split(':')[2])    # 秒
 
     successful = True
     for flg in flags:
@@ -283,7 +283,8 @@ def SetTime():
 def main():
     print('\t  *****************************************\n\
           *  欢迎使用图书馆自动预约-这是自动模式  *\n\
-          *           系统延迟00:03:30            *\n\
+          *         系统预约延迟00:04:00          *\n\
+          *         系统生效延迟00:03:30          *\n\
           *****************************************\n\
           * -在完成必要步骤后                     *\n\
           * -软件将在03:40进行预约                *\n\
