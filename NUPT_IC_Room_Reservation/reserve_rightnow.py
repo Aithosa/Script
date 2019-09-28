@@ -251,9 +251,11 @@ def reserve_main():
 
                     # 退出循环条件
                     if flags[0] and flags[1] and flags[2] and flags[3]:
+                        print("预约成功！")
                         break
                     # 如果时间到达00:05且还有没有预约成功的时间段，则停止预约
                     elif stopcond(flags):
+                        print("预约存在失败时间段")
                         break
 
 
@@ -270,6 +272,7 @@ def stopcond(flags):
             successful = False
 
     if H == 0 and M == 5 and not successful:
+    # if H == 10 and M == 24 and not successful:
         return True
 
 
