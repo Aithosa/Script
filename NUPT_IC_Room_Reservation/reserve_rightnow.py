@@ -57,6 +57,8 @@ def readRoom(conf, room):
 
 # 从conf里读取数据
 def confDeal():
+    # 预约队列，利用python特性创建可变长度的队列
+    reserve_queue = []
     conf = configparser.ConfigParser()
     conf.read('./user_data.cfg')
 
@@ -69,26 +71,43 @@ def confDeal():
         os.system('cls')
     user = [uid, pwd]
 
+    # 添加用户信息
+    reserve_queue.append(user)
+
+    flags = []
+
     # 读取座位是否启用
+    flag0 = conf.get('room_set_0', 'flag')
     flag1 = conf.get('room_set_1', 'flag')
     flag2 = conf.get('room_set_2', 'flag')
+    flag3 = conf.get('room_set_3', 'flag')
+
+    flags = [flag0, flag1, flag2, flag3]
 
     print("预约请求队列: ")
 
     # 读取座位1
-    arr1 = readRoom(conf, 'room_set')
+    if flag0 == 'true':
+        arr0 = readRoom(conf, 'room_set_0')
+    else:
+        arr0 = False
 
     if flag1 == 'true':
-        arr2 = readRoom(conf, 'room_set_1')
+        arr1 = readRoom(conf, 'room_set_1')
+    else:
+        arr1 = False
+
+    if flag2 == 'true':
+        arr2 = readRoom(conf, 'room_set_2')
     else:
         arr2 = False
 
-    if flag2 == 'true':
-        arr3 = readRoom(conf, 'room_set_2')
+    if flag3 == 'true':
+        arr3 = readRoom(conf, 'room_set_3')
     else:
         arr3 = False
 
-    return [user, arr1, arr2, arr3]
+    return [user, arr0, arr1, arr2, arr3]
 
 
 # 登陆
@@ -179,9 +198,10 @@ def reserve_main():
     reserveArr = confDeal()
 
     user = reserveArr[0]
-    seat = reserveArr[1]
+    seat0 = reserveArr[1]
     seat1 = reserveArr[2]
     seat2 = reserveArr[3]
+    seat3 = reserveArr[4]
 
     if login(user, Cookies):
         print('\n 登陆成功...')
@@ -190,13 +210,13 @@ def reserve_main():
 
         # if SetTime():
         if True:
-            flags = [False, False, False]
+            flags = [False, False, False, False]
 
             while (True):
                 if login(user, Cookies):
 
                     if not flags[0]:
-                        flags[0] = reserve(seat, Cookies)
+                        flags[0] = reserve(seat0, Cookies)
                     else:
                         flags[0] = True
 
@@ -210,21 +230,47 @@ def reserve_main():
                     else:
                         flags[2] = True
 
+                    if seat3 is not False and not flags[3]:
+                        flags[3] = reserve(seat3, Cookies)
+                    else:
+                        flags[3] = True
+
                     time.sleep(0.5)
 
                     # 再次预约失败的房间
                     if login(user, Cookies):
 
                         if not flags[0]:
-                            flags[0] = reserve(seat, Cookies)
+                            flags[0] = reserve(seat0, Cookies)
                         if not flags[1]:
                             flags[1] = reserve(seat1, Cookies)
                         if not flags[2]:
                             flags[2] = reserve(seat2, Cookies)
+                        if not flags[3]:
+                            flags[3] = reserve(seat3, Cookies)
 
                     # 退出循环条件
-                    if flags[0] and flags[1] and flags[2]:
+                    if flags[0] and flags[1] and flags[2] and flags[3]:
                         break
+                    # 如果时间到达00:05且还有没有预约成功的时间段，则停止预约
+                    elif stopcond(flags):
+                        break
+
+
+# 停止函数: 如果时间到达00:05且还有没有预约成功的时间段，则停止预约
+def stopcond(flags):
+    now = time.strftime('%H:%M:%S', time.localtime(time.time()))    # 时:分:秒
+    H = int(now.split(':')[0])    # 距离零点还剩的小时
+    M = int(now.split(':')[1])    # 分
+    S = int(now.split(':')[2])    # 秒
+
+    successful = True
+    for flg in flags:
+        if not flg:
+            successful = False
+
+    if H == 0 and M == 5 and not successful:
+        return True
 
 
 # 定时判断器只能提前一天——还未开放
