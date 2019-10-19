@@ -1,0 +1,4 @@
+source=${1}
+
+g++ -std=c++17 ${source}.cpp -o ${source}_run
+./${source}_run
