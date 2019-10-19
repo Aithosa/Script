@@ -272,7 +272,7 @@ def stopcond(flags):
             successful = False
 
     if H == 0 and M == 5 and not successful:
-    # if H == 10 and M == 24 and not successful:
+        # if H == 10 and M == 24 and not successful:
         return True
 
 
@@ -302,7 +302,7 @@ def main():
           Enter启动... ')
 
     # 主进程
-    time.sleep(40)   # 00:03启动，等待40秒开始预约，注意程序本身启动需要若干秒
+    # time.sleep(40)   # 00:03启动，等待40秒开始预约，注意程序本身启动需要若干秒
     reserve_main()
     print('程序即将退出...\n')
     time.sleep(5)
